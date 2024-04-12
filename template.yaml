@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  water-billing-backend
+
+Globals:
+  Function:
+    Timeout: 30
+
+Parameters:
+  PGHOST:
+    Type: String
+  PGUSER:
+    Type: String
+  PGPASSWORD:
+    Type: String
+    
+
+Resources:
+  CreateAccountFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./dist/
+      Handler: ./handlers/accounts.postHandler
+      Runtime: nodejs20.x
+      Layers:
+        - arn:aws:lambda:ap-southeast-1:975050335698:layer:water-billing-deps:10
+      Architectures:
+        - arm64
+      Events:
+        Nest:
+          Type: Api 
+          Properties:
+            Path: /accounts
+            Method: post
+      Environment:
+        Variables:
+          PGUSER: postgres
+          PGHOST: host.docker.internal
+          PGPASSWORD: example
+          PGDATABASE: water_billing
+          PGPORT: 5432
+
+Outputs:
+  NestApi:
+    Description: "API Gateway endpoint URL for Prod stage for a Nest function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
