@@ -1,7 +1,6 @@
 import { toDto } from '../utils/mapper';
 import { AccountsService } from './accounts.service';
-import { CreateAccountDto } from './dto/accounts.dto';
-import { Account } from './interfaces/account.interface';
+import { CreateAccountDto } from '../dto/accounts.dto';
 import { Injectable } from '@nestjs/common';
 
 type CreateAccountInput = {

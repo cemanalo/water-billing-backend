@@ -40,6 +40,29 @@ Resources:
           PGPASSWORD: example
           PGDATABASE: water_billing
           PGPORT: 5432
+  CreateBillingFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./dist/
+      Handler: ./handlers/billings.postHandler
+      Runtime: nodejs20.x
+      Layers:
+        - arn:aws:lambda:ap-southeast-1:975050335698:layer:water-billing-deps:10
+      Architectures:
+        - arm64
+      Events:
+        Nest:
+          Type: Api 
+          Properties:
+            Path: /billings
+            Method: post
+      Environment:
+        Variables:
+          PGUSER: postgres
+          PGHOST: host.docker.internal
+          PGPASSWORD: example
+          PGDATABASE: water_billing
+          PGPORT: 5432
 
 Outputs:
   NestApi:
